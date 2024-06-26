@@ -1,0 +1,11 @@
+insert into categories(Name, ImageUrl) 
+values 
+	('Bebidas', 'bebidas.jpg'),
+	('Lanches', 'lanches.jpg'),
+	('Sobremesas', 'sobremesas.jpg');
+    
+insert into products(Name, Description, Price, ImageUrl, Stock, RegistrationDate, CategoryId) 
+values 
+	('Coca-cola Diet', 'Refrigerante de cola 350 ml', 5.45, 'cocacola-diet.jpg', 50, now(), 1),
+	('Lanche de atum', 'Sanduiche de atum com maionese', 8.50, 'atum.jpg', 10, now(), 2),
+	('Pudim', 'Pudim de leite condensado 100g', 6.75, 'pudim.jpg', 20, now(), 3);
