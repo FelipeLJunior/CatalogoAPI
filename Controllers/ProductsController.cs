@@ -17,9 +17,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<ICollection<Product>> Get()
+    public async Task<ActionResult<ICollection<Product>>> GetAsync()
     {
-        List<Product>? products = _context.Products?.AsNoTracking().ToList();
+        List<Product>? products = await _context.Products.AsNoTracking().ToListAsync();
 
         if(products is null)
         {
@@ -30,9 +30,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "GetProduct")]
-    public ActionResult<Product> Get(int id)
+    public async Task<ActionResult<Product>> GetAsync(int id)
     {
-        Product? product = _context.Products?.AsNoTracking().FirstOrDefault(product => product.ProductId == id);
+        Product? product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(product => product.ProductId == id);
 
         if(product is null)
         {
@@ -70,7 +70,7 @@ public class ProductsController : ControllerBase
 
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id) {
-        Product? product = _context.Products?.FirstOrDefault(product => product.ProductId == id);
+        Product? product = _context.Products.FirstOrDefault(product => product.ProductId == id);
 
         if(product is null) {
             return NotFound();

@@ -15,8 +15,8 @@ public class CategoriesController : ControllerBase {
     }
 
     [HttpGet]
-    public ActionResult<ICollection<Category>> Get() {
-        List<Category>? categories = _context.Categories?.AsNoTracking().ToList();
+    public async Task<ActionResult<ICollection<Category>>> GetAsync() {
+        List<Category>? categories = await _context.Categories.AsNoTracking().ToListAsync();
 
         if(categories is null) {
             return NotFound();
@@ -26,8 +26,8 @@ public class CategoriesController : ControllerBase {
     }
 
     [HttpGet("products")]
-    public ActionResult<ICollection<Category>> GetProductsCategory() {
-        List<Category>? categories = _context.Categories?.Include(table => table.Products).AsNoTracking().ToList();
+    public async Task<ActionResult<ICollection<Category>>> GetProductsCategoryAsync() {
+        List<Category>? categories = await _context.Categories.Include(table => table.Products).AsNoTracking().ToListAsync();
 
         if(categories is null) {
             return NotFound();
@@ -36,9 +36,9 @@ public class CategoriesController : ControllerBase {
         return categories;
     }
 
-    [HttpGet("{id:int}", Name = "GetCategory")]
-    public ActionResult<Category> Get(int id) {
-        Category? category = _context.Categories?.AsNoTracking().FirstOrDefault(category => category.CategoryId == id);
+    [HttpGet("{id:int:min(1)}", Name = "GetCategory")]
+    public async Task<ActionResult<Category>> GetAsync(int id) {
+        Category? category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(category => category.CategoryId == id);
 
         if(category is null) {
             return NotFound();
@@ -59,7 +59,7 @@ public class CategoriesController : ControllerBase {
         return new CreatedAtRouteResult("GetCategory", new {id = category.CategoryId}, category);
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:int:min(1)}")]
     public ActionResult Put(int id, Category category) {
         if(id != category.CategoryId) {
             return BadRequest();
@@ -71,15 +71,15 @@ public class CategoriesController : ControllerBase {
         return Ok(category);
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id:int:min(1)}")]
     public ActionResult Delete(int id) {
-        Category? category = _context.Categories?.FirstOrDefault(category => category.CategoryId == id);
+        Category? category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
 
         if(category is null) {
             return NotFound();
         }
 
-        _context.Categories?.Remove(category);
+        _context.Categories.Remove(category);
         _context.SaveChanges();
 
         return Ok(category);
