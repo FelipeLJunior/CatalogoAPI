@@ -1,17 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using CatalogoAPI.Validations;
 
 namespace CatalogoAPI.Models;
 
 [Table("Products")]
-public class Product
+public class Product : IValidatableObject
 {
     [Key]
     public int ProductId { get; set; }
     
     [Required]
     [StringLength(80)]
+    [UpperFirstLetter]
     public string? Name { get; set; }
     
     [Required]
@@ -31,4 +33,15 @@ public class Product
 
     [JsonIgnore]
     public Category? Category { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
+        
+        if(this.Price <= 0) {
+            yield return new ValidationResult("O Preço precisa ser maior que zero!", new []{nameof(this.Price)});
+        }
+
+        if(this.Stock < 0) {
+            yield return new ValidationResult("O Estoque deve ser maior ou igual a zero!", new []{ nameof(this.Stock)});
+        }
+    }
 }
